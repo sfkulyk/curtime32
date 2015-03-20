@@ -19,6 +19,6 @@ Contact author: saboteur@saboteur.com.ua
 * используются только api функции, посему не вызывается dos-machine
 * и выполнение программы происходит быстрее и корректнее под win32 системами
 
-В исходниках содержится также и код curtime 16bit версии.
+В исходниках содержится также скомпилированные бинарники curtime32 и curtime 16-bit версии.
 
 Справка на Wiki: https://github.com/sfkulyk/curtime32/wiki
