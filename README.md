@@ -4,21 +4,23 @@ FREEWARE (C) 2004-2006 Sergey Kulik aka Saboteur
 
 Contact author: saboteur@saboteur.com.ua
 
-2. Назначение программы:
-Программа  выдает все аргументы в стандартный выход
-Подстановочные символы заменяются на соответствующие им дату/время (см. справку по макросам).
-Можно использовать + и - к текущей дате (секунды, минуты, часы, дни) или подставлять *nix timestamp.
-Можно выводить месяц и день недели по-русски или английски
-Сформированную строку можно перенаправить или выполнить
+Purpose and usage:
+Utility print all arguments to the standard output.
+There are a lot of substitution combination, started with $ character (see curtime32 /help).
+You can use + and - changing output date, also you can use timestamp to set output date (it will not change system date/time).
+There are english and russian names for weekdays and months.
+Formatted output could be executed with "/exec" command.
 
-Была создана для облегчения написания BAT-скриптов, аккуратных записей в логах и другого консольного использования.
-Программа является продолжением проекта CurTime, переведенного в win32.
-Вследствие портирования автоматически исчезли следующие проблемы, которые были в досовской версии curtime:
-* теперь нет проблем с длинными именами файлов
-* теперь нет ограничения длины командной строки в 128 символов
-* используются только api функции, посему не вызывается dos-machine
-* и выполнение программы происходит быстрее и корректнее под win32 системами
+Purpose
+Many years ago there were any tools for windows that could produce formatted date/time output like Unix/Linux "date".
+Program continues CurTime tool (that was written for dos), so curtime32 works under win32.
+There were a lot of issues disappears during this modernisation:
+* No issues with long file names
+* No command line lenght limitation
+* Only wind32 api uses, so no dos-machine routines
+* executes much faster
 
-В исходниках содержится также скомпилированные бинарники curtime32 и curtime 16-bit версии.
+You can download source package with compiled binaries for curtime32 and 16-bit curtime.
 
-Справка на Wiki: https://github.com/sfkulyk/curtime32/wiki
+Detailed help: https://github.com/sfkulyk/curtime32/wiki
+               curtime32 /help
