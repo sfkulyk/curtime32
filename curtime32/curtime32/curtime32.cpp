@@ -91,6 +91,7 @@ int main(int argc, char **argv)
 
  if ( !str_prefix(argv[1],"/help") || !str_prefix(argv[1],"/HELP")
    || !str_cmp(argv[1],"-h") || !str_cmp(argv[1],"-H")
+   || !str_cmp(argv[1],"-help") || !str_cmp(argv[1],"--help")
    || !str_cmp(argv[1],"/?") || !str_cmp(argv[1],"-?"))
  {
     _stprintf(buf,
@@ -146,18 +147,18 @@ int main(int argc, char **argv)
  {
    for (i=1;argv[i]!='\0';i++)
    {
-     if (!str_prefix(argv[i],"/exec") || !str_prefix(argv[i],"EXEC"))
+     if (!str_prefix(argv[i],"/exec") || !str_prefix(argv[i],"--exec"))
      {
        SET_BIT(flag,EXECUTE);
        continue;
      }
-     if (!str_prefix(argv[i],"/time") || !str_prefix(argv[i],"TIME"))
+     if (!str_prefix(argv[i],"/time") || !str_prefix(argv[i],"--time"))
      {
        SET_BIT(flag,SHOW_TIME);
        continue;
      }
 
-     if (!str_prefix(argv[i],"/file") || !str_prefix(argv[i],"/FILE"))
+     if (!str_prefix(argv[i],"/file") || !str_prefix(argv[i],"/FILE") || !str_prefix(argv[i],"--file"))
      {
        _stprintf (filename,argv[i]+6);
        SET_BIT(flag,OUT_TO_FILE);
