@@ -1,7 +1,7 @@
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
                             CURrent TIME'32 console utility
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-1. License:
+1. License: MIT License
  CURTIME32 - Current Time'32 console utility
  FREEWARE (C) 2004-2006 Sergey Kulik aka Saboteur
  Contact author: saboteur@saboteur.com.ua

@@ -1,7 +1,7 @@
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
                             CURrent TIME console utility
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-1. License:
+1. License: MIT License
   CURTIME - Current Time console utility
   FREEWARE (C) 2000-2003 Sergey Kulik aka Saboteur
   Contact author: saboteur@biocon.kiev.ua
