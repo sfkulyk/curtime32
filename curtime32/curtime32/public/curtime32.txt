@@ -1,160 +1,134 @@
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
                             CURrent TIME'32 console utility
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-1. Лицензионное соглашение:
+1. License:
  CURTIME32 - Current Time'32 console utility
  FREEWARE (C) 2004-2006 Sergey Kulik aka Saboteur
  Contact author: saboteur@saboteur.com.ua
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-2. Назначение программы:
-   Программа просто выдает все аргументы в стандартный выход, но вдобавок
- позволяет использовать макросы, которые заменяются на соответсвующие значения
- (см. справку по макросам).
-   Была создана для облегчения написания BAT-скриптов, аккуратных записей в
- логах и другого консольного использования.
-   Программа является продолжением проекта CurTime, переведенного в win32
- приложение.
-   Вследствие портирования автоматически исчезли следующие проблемы, которые
- были в досовской версии curtime:
-    * теперь нет проблем с длинными именами файлов
-    * теперь нет ограничения длины командной строки в 128 символов
-    * используются только api функции, посему не вызывается dos-machine
-      и выполнение программы происходит быстрее и корректнее под win32
-      системами
+2. Purpose:
+   Print all arguments to stdout, replacing all internal substitutes with
+    special values from date/time.
+   Was created to simplify batch scripting, logging and other console stuff.
+   Program was based on DOS version of CurTime
+   After porting we have the following changes:
+    * No problems with using long file names
+    * Command line length is not limited by 128 characters
+    * We are using windows API methods, so this version will not work under DOS
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-3. Пример использования:
+3. Usage examples:
 
-a) выполняем запись в лог файл с указанием даты запущенного. Имя лог-файла
-   состоит из даты - день и месяц.
+a) Write data to log file, log file name also contains substitutes:
 
-   --- начало backup.bat ---
-   curtime32 "Архивирование запущено в $T" /file d:\backup\$d$M.log
+   --- start of backup.bat ---
+   curtime32 "Backup started at $T" /file d:\backup\$d$M.log
    rar a -r d:\backup\periodic.rar c:\base\*.*
-   curtime32 "Архивирование завершено в $T$c==========" /file d:\backup\$d$M.log
-   ---- конец backup.bat ---
+   curtime32 "Backup completed at $T$c==========" /file d:\backup\$d$M.log
+   ---- end of backup.bat ---
 
-b) выполняем архивацию файлов базы данных в архив, с именем, состоящим из года,
-    месяца и дня выполнения архивации
+b) Backing up database using console rar archiver, the name of archive will
+   contains current date:
 
-   --- начало backup.bat ---
    curtime32 "rar.exe a -r d:\Backup_$y$M$d.rar c:\bases\*.*" /exec >>backup.log
-   ---- конец backup.bat ---
 
-d) Поддержка перенаправления ввода:
+d) Utility supports redirections:
 
    echo Сегодня у нас $V|curtime32
    type text.txt|curtime32
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-4. Справка по использованию:
+4. Help:
 
-   Использование:
    curtime32.exe
-    При запуске программы без аргументов, она будет ожидать ввода данных из
-    стандартного ввода STDIN. перенаправление поддерживается.
+    Without arguments utility will waits for input from STDIN.
 
    curtime32.exe arg1 arg2 arg3... argn [> >> output]
-    output - может быть файл или другой поток, если не указан - на экран.
-    аргументы можно заключать в кавычки, аргументы без кавычек объединяются,
-    отделяясь друг от друга ОДНИМ пробелом, то есть
+    If output skipped, stdout will be used
+    You can use quotas or just specify arguments, all spaces will be
+     squeezed in this case:
 
       curtime32 arg1 arg2     = "arg1 arg2"
       curtime32 arg1   arg2   = "arg1 arg2"
       curtime32 "arg1   arg2" = "arg1   arg2"
 
-   можно перенаправлять в curtime из другой программы, например из echo
+   You can use redirections:
    echo arg | curtime32.exe
 
-     Справка по аргументам:
+     Options:
 
-   -h - вывод справки по макросам
-   /file <filename> - имя файла для вывода. Может содержать макросы. Запись
-                      происходит добавлением в файл, а не перезаписыванием.
-   /exec            - произойдет выполнение строки аргументов, что весьма
-                      удобно для автоматизирования процессов
-   /time            - используется только совместно с /exec, иначе не
-                      производит никаких действий. По завершению выполнения
-                      команды выводит длительность ее выполнения.
+   /h               - Help
+   /file <filename> - Filename for output (filename also can contains substitutes)
+                      Data will be written to the end of file (append).
+   /exec            - After parsing input, execute the resulting line
+   /time            - Used only with /exec option. Shows execution time.
 
-     Справка по макросам: 
+     Substitutes: 
 
-   $c - перевод строки
-   $p - пробел
-   \" - символ кавычек
-   $$ - символ доллара
-   $T - время в виде       [hh:mm:ss]
-   $D - дата в виде        [Jan dd yyyy]
-   $Z - дата в виде        [Янв дд гггг]
-   $F - дата/время в виде  [Mon Jan dd hh:mm:ss yyyy]
-   $f - дата/время в виде  [Пн Янв дд чч:мм:сс гггг]
-   $Y - год в виде         [yyyy]
-   $y - год в виде         [yy]
-   $j - месяц в виде       [Jan]
-   $J - месяц в виде       [January]
-   $g - месяц в виде       [Янв]
-   $g - месяц в виде       [Январь]
-   $M - месяц в виде       [xx]
-   $d - день месяца в виде [xx]
-   $n - день недели в виде [xx]
-   $w - день недели в виде [Mon]
-   $W - день недели в виде [Monday]
-   $v - день недели в виде [Пн]
-   $V - день недели в виде [Понедельник]
-   $h - час в виде         [xx]
-   $m - минуты в виде      [xx]
-   $s - секунды в виде     [xx]
-   $S - милисекунды в виде [xxx]
-   $U - вывод количества секунд с 1970 года (*nix timestamp) [xxxxxxxxxx]
-   $u - Конвертирование времени из unix-like вида в любое.
-        синтаксис: после $u должно идти 10-значное время в виде *nix timestamp
-        (количество секунд после 1970 года). Если цифр больше - остальные воспринимаются
-        как обычный текст. Если меньше - первая же НЕ цифра указывает на конец данных.
-        После команды $u время можно вывести любыми другими командами - оно установлено
+   $c - new line
+   $p - space
+   \" - quotas
+   $$ - dollar sign
+   $T - time in format       [hh:mm:ss]
+   $D - date in format       [Jan dd yyyy]
+   $Z - rus datein format    [Янв дд гггг]
+   $F - date/time as         [Mon Jan dd hh:mm:ss yyyy]
+   $f - date/time as         [Пн Янв дд чч:мм:сс гггг]
+   $Y - 4-digit year         [yyyy]
+   $y - 2-digit year         [yy]
+   $j - short month name     [Jan]
+   $J - full month name      [January]
+   $g - short rus month name [Янв]
+   $g - full rus month name  [Январь]
+   $M - month as number      [xx]
+   $d - day of month, number [xx]
+   $n - day of week, number  [xx]
+   $w - short day of week    [Mon]
+   $W - full day of week     [Monday]
+   $v - rus short day of weel[Пн]
+   $V - rus full day of week [Понедельник]
+   $h - hours                [xx]
+   $m - minutes              [xx]
+   $s - seconds              [xx]
+   $S - milliseconds         [xxx]
+   $U - timestamp (seconds starting 01/01/1970)  [xxxxxxxxxx]
+   $u - set curtime internal time according to the provided
+        syntax: $uXXXXXXXXXX (10 digits)
         как если бы оно было установлено при помощи $+ или $-...
-        Примеры:
+        Example:
           >curtime32 "$u0$Y $M $d $h:$m:$s"
           1970 01 01 00:00:00
           >curtime32.exe $u113025982$w $j $d $h:$m:$s $Y
           Wed Aug 01 04:06:22 1973
+   $+xy - change curtime internal time (add)
+   $-xy - change curtime internal time (subtract)
+   $*   - reset curtime internal time to the current local date/time
+          x - in range between 0 and 32000
+          y - s-seconds, m-minutes, h-hours, d-days
 
-   $+xy - изменить выводимую дату/время
-   $-xy - изменить выводимую дату/время
-   $* - изменить выводимую дату/время на текущую (сброс изменений, обновление)
-          x - от 0 до 32000
-          y - s-секунды, m-минуты, h-часы, d-дни
+          fi x=1, you can skip it ($+1d is the same as $+d)
 
-          если x=1, то его можно не писать ($+1d тоже что и $+d)
-
-          Эти три команды ничего не выводят, но меняют установку. То есть если вы
-          хотите вывести какое число будет завтра, то нужно писать "$+d$d" -
-          $+d - прибавляем один день,
-          $d - выводим дату.
-          
-          "$+2d$d$-5d$d$*$d" - означает прибавить два дня, вывести число (день месяца),
-          отнять 5 дней, вывести число, сбросить на текущее время/дату, вывести число.
+          "$+d$d" - add one day, show day of month
+          "$+2d$d$-5d$d$*$d" - add two days, show day of month (DoM), subtract 5 days
+            show DoM, reset date to current, show DoM.
    
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-5. История создания:
-Версия
-   v 1.0 - первый релиз после портирования с dos16 в win32
-         + добавлены милисекунды
-         - обнаружены проблемы с кодировками
-         - временно не работает "сдвиг" времени
-         спасибо за багрепорты Гончаров.А.М.
-   v 1.2 - исправлен баг с $$
-         - исправлен баг с номерами месяцев
-   v 1.3 - исправлен баг с номерами дней недели
-         - исправлен баг с кодировками при перенаправлении echo | curtime32
-   v 1.5 - восстановлена работа "сдвигов времени"
-           спасибо за багрепорт Pavel A Resh
-   v 1.6 - добавлен хелп-файл
-         - исправлены очепятки в коде
-   v 1.7 - 15.08.2005 добавлена возможность конвертировать время из unix-like в любое
-   v 1.8 - 12.08.2008 исправлена работа конструкций типа curtime32 "echo aa" /exec /file file.txt
-           в которой вывод aa шел в std а не в указанный file.txt
-   v 1.9 - 18.09.2008 добавлен $U - вывод количества секунд с 1.1.1970 года (unix-формат)
-   v 1.10- 27.04.2009 исправлена работа с кодировкой, теперь корректно выводит русские
-           символы в командной строке и в батниках (в бат файлах следует пользоваться
-           досовской кодировкой CP866). спасибо за багрепорт Yakov Kaluzhenko
+5. Changes history:
+
+   v 1.0 - first release after porting dos16 to win32
+         + add milliseconds
+         - found codepage issues
+         - temporarily doesn't work time shifting  (bugreport by Goncharov A.M.)
+   v 1.2 - fixed bug with $$
+         - fixed bug with month number
+   v 1.3 - fixed bug with day numbers
+         - fixed bug with redirection
+   v 1.5 - fixed bug with time shifts (thankf to Pavel A Resh)
+   v 1.6 - Added new help file
+   v 1.7 - 15.08.2005 Added works with timestamp
+   v 1.8 - 12.08.2008 fixed issues related to internal redirections, like
+               curtime32 "echo aa" /exec /file file.txt - "aa" was send to std instead of /file
+   v 1.9 - 18.09.2008 add timestamp output
+   v 1.10- 27.04.2009 fixed codepages in interactive work and in batch scripts (use CP866 in scripts)
+           thanks to  Yakov Kaluzhenko
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

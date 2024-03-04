@@ -1,223 +1,187 @@
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
                             CURrent TIME console utility
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-1. Лицензионное соглашение:
- CURTIME - Current Time console utility
- FREEWARE (C) 2000-2003 Sergey Kulik aka Saboteur
- Contact author: saboteur@biocon.kiev.ua
+1. License:
+  CURTIME - Current Time console utility
+  FREEWARE (C) 2000-2003 Sergey Kulik aka Saboteur
+  Contact author: saboteur@biocon.kiev.ua
 
-   Программа распространяется бесплатно, с учетом, что этот текстовый файл
- будет распространятся вместе с исполняемым.
-   Программа скомпилирована под DOS, поэтому работает во всех версиях dos и
- Windows. Об ошибках прошу писать на мой емайл.
-   В связи с ограничением командной строки дос, она не должна превышать 128
- символов.
+  This utility is freeware, if you will keep this text file within the executable,
+    if you want to share utility with somebody else also please copy text file too.
+  Program was compiled for DOS, so should work with all DOS versions and earlies
+     Windows 9x series.
+  According to DOS command line limits, the maximum length is 128 bytes/characters.
+
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-2. Назначение программы:
-   Программа просто выдает все аргументы в стандартный выход, но вдобавок
- позволяет использовать макросы, которые заменяются на соответсвующие значения
- (см. справку по макросам).
-   Была создана для облегчения написания BAT-скриптов, аккуратных записей в
- логах и другого консольного использования.
+2. Purpose:
+  Program shows all the arguments to stdout, but you can use character
+    substitution, which will be replaced with special values (see help below)
+  This tool was written do simplify batch scripting under DOS and windows.
+  There are useful options, for example to generate a line and execute it.
 
-   В связи с широким использованием программы в автоматизации различных
- процессов, начиная с версии 2.14 поддерживается выполнение обработанной строки
- аргументов. В примерах указано, как работает это мощное нововведение.
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-3. Пример использования:
+3. Usage:
 
-a) выполняем запись в лог файл с указанием даты запущенного. Имя лог-файла
-   состоит из даты - день и месяц.
-
-   --- начало backup.bat ---
-   curtime "Архивирование запущено в $T" /file d:\backup\$d$M.log
+a) write to log file with specifying date. The name of log file also
+     contains month and day:
+   --- start of backup.bat ---
+   curtime "Archiving started $T" /file d:\backup\$d$M.log
    rar a -r d:\backup\periodic.rar c:\base\*.*
-   curtime "Архивирование завершено в $T$c==========" /file d:\backup\$d$M.log
-   ---- конец backup.bat ---
+   curtime "Archiving completed $T$c==========" /file d:\backup\$d$M.log
+   ---- end of backup.bat ---
 
-b) выполняем архивацию файлов базы данных в архив, с именем, состоящим из года,
-    месяца и дня выполнения архивации
+b) perform archiving of database files using rar archiver. Name of archiver
+     contains current year, month and day:
 
-   --- начало backup.bat ---
+   --- start of backup.bat ---
    curtime "rar.exe a -r \"d:\Backup_$y$M$d.rar\" c:\bases\*.*" >>temp.bat
    call temp.bat
    del temp.bat
-   ---- конец backup.bat ---
+   ---- end of backup.bat ---
 
-c) Начиная с версии 2.14 пример b теперь выглядит так:
+c) The previous example with /exec option:
 
-   --- начало backup.bat ---
+   --- start of backup.bat ---
    curtime "rar.exe a -r d:\Backup_$y$M$d.rar c:\bases\*.*" /exec >>backup.log
-   ---- конец backup.bat ---
+   ---- end of backup.bat ---
 
-d) Поддержка перенаправления ввода:
+d) Utility supports input redirections:
 
-   echo Сегодня у нас $V|curtime
+   echo Today we have $V|curtime
    type text.txt|curtime
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-4. Справка по использованию:
+4. curtime.exe
+    Without arguments curtime will wait for input from stdin
 
-   Использование:
-   curtime.exe
-    При запуске программы без аргументов, она будет ожидать ввода данных из
-    стандартного ввода STDIN. перенаправление поддерживается
-
-   curtime.exe arg1 arg2 arg3... argn [> >> output]
-    output - может быть файл или другой поток, если не указан - на экран.
-    аргументы можно заключать в кавычки, аргументы без кавычек объединяются,
-    отделяясь друг от друга ОДНИМ пробелом, то есть
+   curtime.exe arg1 arg2 arg3... argn [| > >> output]
+    output - if /file option is not used, stdout will be used by default
+    you can put arguments to quotas, without quotas, arguments will be
+     concatenated into single string with the space as separator 
 
       curtime arg1 arg2     = "arg1 arg2"
       curtime arg1   arg2   = "arg1 arg2"
       curtime "arg1   arg2" = "arg1   arg2"
 
-   можно перенаправлять в curtime из другой программы, например из echo
+   You can redirect text from to curtime:
    echo arg | curtime.exe
 
-     Справка по аргументам:
+     Options:
 
-   -h - вывод справки по макросам
-   /file <filename> - имя файла для вывода. Может содержать макросы. Запись
-                      происходит добавлением в файл, а не перезаписыванием.
-   /exec            - произойдет выполнение строки аргументов, что весьма
-                      удобно для автоматизирования процессов
-   /time            - используется только совместно с /exec, иначе не
-                      производит никаких действий. По завершению выполнения
-                      команды выводит длительность ее выполнения.
+   -h               - Help
+   /file <filename> - Output file (append)
+   /exec            - Execute argument string
+   /time            - Used only with /exec option or ignored.
+                      With /exec options shows execution time
 
-     Справка по макросам: 
+     Substitutes:
 
-   $c - перевод строки
-   $p - пробел
-   \" - символ кавычек
-   $$ - символ доллара
-   $T - время в виде       [hh:mm:ss]
-   $D - дата в виде        [Jan dd yyyy]
-   $Z - дата в виде        [Янв дд гггг]
-   $F - дата/время в виде  [Mon Jan dd hh:mm:ss yyyy]
-   $f - дата/время в виде  [Пн Янв дд чч:мм:сс гггг]
-   $Y - год в виде         [yyyy]
-   $y - год в виде         [yy]
-   $j - месяц в виде       [Jan]
-   $J - месяц в виде       [January]
-   $g - месяц в виде       [Янв]
-   $g - месяц в виде       [Январь]
-   $M - месяц в виде       [xx]
-   $d - день месяца в виде [xx]
-   $n - день недели в виде [xx]
-   $w - день недели в виде [Mon]
-   $W - день недели в виде [Monday]
-   $v - день недели в виде [Пн]
-   $V - день недели в виде [Понедельник]
-   $h - час в виде         [xx]
-   $m - минуты в виде      [xx]
-   $s - секунды в виде     [xx]
-   $+xy - изменить выводимую дату/время
-   $-xy - изменить выводимую дату/время
+   $c - new line
+   $p - space
+   \" - quote character
+   $$ - dollar character
+   $T - time in format             [hh:mm:ss]
+   $D - date in format             [Jan dd yyyy]
+   $Z - date in format             [Янв дд гггг]
+   $F - date/time in format        [Mon Jan dd hh:mm:ss yyyy]
+   $f - date/time in format        [Пн Янв дд чч:мм:сс гггг]
+   $Y - 4-digit year               [yyyy]
+   $y - 2-digit year               [yy]
+   $j - short month name           [Jan]
+   $J - full month name            [January]
+   $g - short rus month name       [Янв]
+   $g - long rus month name        [Январь]
+   $M - month as a digit           [xx]
+   $d - day of month               [xx]
+   $n - day of week                [xx]
+   $w - short name day of week     [Mon]
+   $W - long name day of week      [Monday]
+   $v - short rus name day of week [Пн]
+   $V - long rus name day of week  [Понедельник]
+   $h - hours       [xx]
+   $m - minutes     [xx]
+   $s - seconds     [xx]
+   $* - reset date/time to the current date/time
+   $+xy - increase current date/time
+   $-xy - decrease current date/time
           x - от 0 до 32000
-          y - s-секунды, m-минуты, h-часы, d-дни
-          если x=1, то его можно не писать ($+1d тоже что и $+d)
-          Последние три команды не выводят информацию, а лишь изменяют,
-          то есть если вы хотите вывести какое число будет завтра, то нужно
-          писать "$+d$d" - $+d - прибавляем один день, $d - выводим дату.
-          "$+2d$d$-5d$d$*$d"
-          прибавить два дня, вывести число, отнять 5 дней, вывести число,
-          установить текущее время/дату, вывести число.
-   $* - изменить выводимую дату/время на текущую (сброс изменений, обновление)
+          y - s-seconds, m-minutes, h-hours, d-days
+          if x=1, you can skip it ($+1d is the same as $+d)
+          These commands do not show anything, only changing the date.
+          if you want to pring tomorrow date, use:
+            "$+d$d" - add 1 day, show day of month.
+            "$+2d$d$-5d$d$*$d"  add two days, show day of month (DoM),
+                subtract 5 days, show DoM, set date to the current date, show DoM
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-5. История создания:
-Версия
- * 1.0   первый релиз, выводит дату и время :)
+5. Changes history:
 
- * 1.1   добавлен макрос для вывода полной даты
-         добавлен макрос для вывода только времени
+ * 1.0   First release, shows date and time :)
 
- * 1.2   добавлен макрос для вывода только даты
-         добавлен макрос cr - перевод строки
-         добавлен макрос sp  - пробел
-         новая возможность - теперь выводится весь сопутствующий текст
-          без изменений
+ * 1.1   Added substitution to show full date
+         Added substitution to show time only
 
- * 1.3   переписана процедура обработки аргументов командной строки -
-           гибче синтаксис работы с несколькими аргументами
-         все макросы переименованы - теперь используется стиль
-           а ля $x, где x - макрос
+ * 1.2   Added substitution to show date only
+         Added $c - new line
+         Added $p - space
+         All the other texts will be printed as is
 
- * 1.4   добавлен макрос $y - двузначный текущий год
-         добавлен макрос $m - текущий месяц числом
-         добавлен макрос $w - текущий день недели числом
+ * 1.3   Rewrite argument parsing, we can work with multiple arguments
+         all substitutions start with $
 
- * 1.5   переписана проценуда обработки аргументов командной строки,
-           теперь корректно поддерживаются аргументы в кавычках "", но
-           совершенно свободно можно работать и вообще без них
-         исправлена ошибка с пробелами
-         переписана справка
+ * 1.4   Added $y - yy
+         Added $m - mm
+         Added $w - ww
 
- * 1.6   в командной строке теперь можно использовать русские символы
+ * 1.5   Added quote support for arguments
+         Created help option
 
- * 1.7   переписана базовая процедура, теперь гораздо быстрее работает
-         обработка и работает под чистым ДОС
-         Значительно уменьшен размер программы - теперь меньге 20 кб
+ * 1.6   We can use localized text in command line
 
- * 1.8   Добавлены новые макросы
-         для вывода времени используются функции ДОС
-         добавлен макрос \" для вывода кавычек
-         обновлена справка
+ * 1.7   Architecture changed to increase performance
+         Everything works under DOS (not only in windows cmd)
+         Significally decreases program size less than 20 kb
 
- * 1.9   пофиксены ошибки
-         добавлены макросы вывода названий дней недели и месяцев
-         переписана процедура обработки макросов -
-           теперь большие и маленькие буквы различаются
+ * 1.8   New substitutions
+         Using DOS functions for output
+         Add \" to show quotes
 
- * 1.99  добавлены префиксы в числах - теперь число 1 всегда будет как 01
+ * 1.9   Fixed mistakes
+         Names for day of week and month
+         Uppercase and lowercase sensitivity for substitutes
 
- * 2.0   пробелы теперь не обрезаются при использовании аргументов без кавычек
+ * 1.99  Added leading zeros
+
+ * 2.0   Fixed issue with spaces in arguments without quotes
          Jun теперь June :)
-         переписана функция калькуляции даты - быстрее
-         добавлена возможность изменять текущее время для вывода - мы можем
-           посмотреть какой день недели будет например через 2000 секунд :)
-           поддерживается изменение дней, минут...  но в пределах +=32000
-         добавлен макрос возвращения к текущему времени $*
-         обновлена справка
+         Date calculations performance improved
+         Added possibility to add/subtract for current time
+           For example, we can see the day of a week in 2000 seconds ;)
+           add/sub supports for days, hours minutes, seconds
+         Also added reset date/time to current
 
- * 2.10  15/04/02. Полностью переписан код для поддержки команды /file - мы
-         можем выполнить вывод в файлик, имя которого тоже создается из
-         curtime. Вывод добавляется (предыдущее содержимое файла не стирается).
-         Добавлена поддержка перенаправления вывода > и >>
+ * 2.10  15/04/02. A lot of rewriting to support /file option.
+         The file name for /file option also can contain substitutes.
+         For stdout we can use redirections now
 
- * 2.11  18/07/2003. Исправлена ошибка с обработкой пересчета текущей даты.
+ * 2.11  18/07/2003. Fixed error with date calculation.
 
- * 2.12  01/08/2003. Переписана процедура запуска программы для поддержки
-         конвейера. Теперь curtime полностью поддерживает конвейер ОС, и
-         позволяет использовать stdin в качестве ввода. В связи с этим,
-         при запуске программы без аргументов она ничего не выводит и ждет
-         ввода данных. А для вызова справки теперь необходимо запускать
-         программу с аргументом (-h)
+ * 2.12  01/08/2003. Rewritten input/output to support standard stdin/stdout
+         Now without arguments, program will wait for input
+         To see help, now you must use -h option
 
- * 2.13  06/08/2003. Добавлены макросы для вывода русских месяцев и дней
-         недели переписана справка и добавлен внешний файл справки и истории
+ * 2.13  06/08/2003. Substitutions for russian names for days of week and months
 
- * 2.14  21/07/2004. Добавлена мощная функция /exec - пустить обработанную
-         строку аргументов на выполнение через системную функцию system().
-         В принципе благодаря этой возможности функция /file <filename> почти
-         теряет свой смысл, так как для выполнения большинства команд мы можем
-         просто делать перенаправление с исполнением то есть:
+ * 2.14  21/07/2004. Added powerful option /exec - which allows you to execute
+         string after all substitutes were performed.
+         May be /file not needs anymore. 
+           before: curtime "Process started at $h:$m$c" /file $Y$M$d
+              now: curtime "echo Process started at $h:$m >> $Y$M$d" /exec
 
-           раньше: curtime "Запустили процесс в $h:$m$c" /file $Y$M$d
-
-           теперь: curtime "echo Запустили процесс в $h:$m >> $Y$M$d" /exec
-
-         Второе выглядит более гуманным и правильным с точки зрения ОС,
-         но для совместимости версий пока /file оставлена, и вроде проблем
-         не замечено. Тем не менее, лучше отказаться от ее использования,
-         поскольку если будут еще версии curtime, то возможно я полностью
-         удалю поддержку этой команды.
- * 2.15  Добавлена функция /time - для вывода времени выполнения команды в
-         виде :
+         The second looks more "standard usage" of command line tools
+         But I will keep /file option for backward compatibility
+ * 2.15  Add /time - show execution time for /exec option
          Executing time: h:mm:ss (xx secs)
-         также поправлен вывод информации stdout - при использовании опции
-         /file ВСЕ идет только в file, а не в stdout
- * 2.16  Опции аргументов можно вводить не полностью (/exec = /ex = /e)
-         Обновлена справка в программе и прилагаемом файле
+         If /file options is used, we do not print anything to stdout
+ * 2.16  You can use shortened options (/exec = /ex = /e)
+         Updated help and external file
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
